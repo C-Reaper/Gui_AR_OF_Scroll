@@ -4,10 +4,15 @@
 #include "/home/codeleaded/System/Static/Library/Random.h"
 #include "/home/codeleaded/System/Static/Library/OpticalFlow.h"
 
+/*
+Orientation:
+4 Fingers pointing:
+- up down
+- right left
+*/
 
 #define OUTPUT_WIDTH    (RLCAMERA_WIDTH / 2)
 #define OUTPUT_HEIGHT   (RLCAMERA_HEIGHT / 2)
-
 
 RLCamera rlc;
 OpticalFlow of;
@@ -60,10 +65,10 @@ void Update(AlxWindow* w){
         OpticalFlow_Set(&of,&rlc.lastimg,w->ElapsedTime);
     }
 
-    const Vec2 max = OpticalFlow_Max(&of);
-    const Vec2 sig = Vec2_Mulf(OpticalFlow_Area(&of,max),0.5f);
+    //const Vec2 max = OpticalFlow_Max(&of);
+    //const Vec2 sig = Vec2_Mulf(OpticalFlow_Area(&of,max),0.5f);
     
-    //const Vec2 sig = OpticalFlow_Integrate(&of);
+    const Vec2 sig = OpticalFlow_Integrate(&of);
     const float l_sig = Vec2_Mag(sig);
     
     if(l_sig > 10.0f){
@@ -100,7 +105,7 @@ void Update(AlxWindow* w){
     Clear(BLACK);
 
     VF_Render(WINDOW_STD_ARGS,of.flow,OUTPUT_WIDTH,OUTPUT_HEIGHT);
-    RenderLine(max,Vec2_Add(max,Vec2_Mulf(Vec2_Norm(of.flow[(int)max.y * of.captured.w + (int)max.x]),50.0f)),BLUE,1.0f);
+    //RenderLine(max,Vec2_Add(max,Vec2_Mulf(Vec2_Norm(of.flow[(int)max.y * of.captured.w + (int)max.x]),50.0f)),BLUE,1.0f);
     RenderRect(rect_p.x,rect_p.y,rect_d.x,rect_d.y,GREEN);
 
     printf("\r%f %f",sig.x,sig.y);
